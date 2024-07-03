@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from database import create_table, insert_into_table
-from models import User
+from model import User
 
 app = FastAPI()
 
