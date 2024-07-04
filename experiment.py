@@ -46,7 +46,9 @@ def provision():
         return {"message": "Provising completed"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
+
+
+## This is not working need to debug
 @app.post("/run-query")
 async def run_query(request: Request):
     print(f"Request method : {request.method}")
@@ -60,7 +62,8 @@ async def run_query(request: Request):
         return {"result": result}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-    
+
+#this is not working need to debug
 @app.post("/user")
 async def create_user(user: UserRequest):
     print(f"Request method : {Request.method}")
