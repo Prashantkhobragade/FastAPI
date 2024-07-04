@@ -1,0 +1,10 @@
+applications:
+- name: FastAPI
+  random-route : true
+  path: ./
+  memory: 128M
+  buildpacks:
+  - python_buildpack
+  command: uvicorn main:app --reload
+  services:
+  - postgresql

@@ -1,6 +1,6 @@
 fastapi
 psycopg2-binary 
-psycopg2-extras
+
 
 uvicorn
 cfenv

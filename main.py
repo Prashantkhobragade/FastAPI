@@ -1,13 +1,25 @@
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import HTMLResponse
-from database import connect_to_database, execute_create_queries, execute_query
+from pydantic import BaseModel
+from database import connect_to_database, execute_create_queries, execute_query, insert_into_table
 
 app = FastAPI()
 
+
+class UserRequest(BaseModel):
+    username: str
+    email: str
+
+
 @app.get("/provision")
 def provision(request: Request):
-    create_queries = [
+    create_queries = ["""
         # Create table queries
+            CREATE TABLE IF NOT EXISTS users (
+            id SERIAL PRIMARY KEY,
+            username VARCHAR(50) NOT NULL,
+            email VARCHAR(100) NOT NULL
+                );"""
     ]
 
     connection = connect_to_database()
@@ -31,3 +43,12 @@ async def run_query(request: Request):
         return HTMLResponse(content=result)
     except Exception as error:
         raise HTTPException(status_code=500, detail=f"An error occurred: {error}")
+    
+
+@app.post("/user")
+async def create_user(user: UserRequest):
+    try:
+        insert_into_table(user)
+        return {"message": "User created successfully"}
+    except Exception as e:
+        raise HTTPException(status_code = 500, detail = str(e))

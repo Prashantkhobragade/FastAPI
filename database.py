@@ -1,4 +1,5 @@
 import os
+import json
 import psycopg2
 from psycopg2 import pool
 from cfenv import AppEnv
@@ -57,4 +58,22 @@ def execute_query(connection, query):
         raise HTTPException(status_code=500, detail=f"Error executing query: {error}")
     finally:
         cursor.close()
+        connection_pool.putconn(connection)
+
+def insert_into_table(user):
+    try:
+        connection = connect_to_database()
+        cursor = connection.cursor()
+        cursor.execute(
+            """
+            INSERT INTO users (username, email)
+            VALUES (%s, %s);
+            """, (user.username, user.email)
+        )
+        connection.commit()
+    except (Exception, psycopg2.Error) as error:
+        raise HTTPException(status_code = 500, detail= f"Error inserting into table: {error}")
+    finally:
+        if cursor:
+            cursor.close()
         connection_pool.putconn(connection)
